@@ -1,1 +1,11 @@
 require 'autotest/growl'
+
+Autotest.add_hook(:initialize) {|at|
+  at.add_exception %r{^\.git}  # バージョン管理システムのファイルを無視
+  at.add_exception %r{^./tmp}  # テンポラリファイルを無視。でないと、延々とテストが繰り返される。
+  #  at.clear_mappings         # autotestデフォルトの検査対象ディレクトリをクリアする。 (test/test*rb)
+  at.add_mapping(%r{^lib/.*\.rb$}) {|f, _|
+    Dir['spec/**/*.rb']
+  }
+  nil
+}
